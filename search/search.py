@@ -86,17 +86,17 @@ def depthFirstSearch(problem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
-    "*** YOUR CODE HERE ***"
+    "*** YOUR CODE HERE IF YOU WANT TO PRACTICE ***"
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
+    "*** YOUR CODE HERE IF YOU WANT TO PRACTICE ***"
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
+    "*** YOUR CODE HERE IF YOU WANT TO PRACTICE ***"
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
@@ -108,7 +108,17 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
+    "*** YOUR CODE HERE IF YOU WANT TO PRACTICE ***"
+    util.raiseNotDefined()
+
+def iterativeDeepeningSearch(problem):
+    """Search the deepest node in an iterative manner."""
+    "*** YOUR CODE HERE FOR TASK 1 ***"
+    util.raiseNotDefined()
+
+def waStarSearch(problem, heuristic=nullHeuristic):
+    """Search the node that has has the weighted (x 2) lowest combined cost and heuristic first."""
+    "*** YOUR CODE HERE FOR TASK 2 ***"
     util.raiseNotDefined()
 
 
@@ -117,3 +127,5 @@ bfs = breadthFirstSearch
 dfs = depthFirstSearch
 astar = aStarSearch
 ucs = uniformCostSearch
+ids = iterativeDeepeningSearch
+wastar = waStarSearch
