@@ -1,5 +1,5 @@
 class: "GraphSearchTest"
-algorithm: "waStarSearch"
+algorithm: "iterativeDeepeningSearch"
 
 diagram: """
 
@@ -19,7 +19,7 @@ transitions.  The number next to the arrow is the cost of that transition.
 #      <start state> <actions> <end state> <cost>
 graph: """
 start_state: A
-goal_states: H F
+goal_states: H
 A Right B 2.0
 B Right H 4.0
 B Down D 2.0
