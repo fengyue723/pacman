@@ -575,7 +575,6 @@ class CapsuleSearchProblem(FoodSearchProblem):
 
         self.startState = gameState.getPacmanPosition()
         self.costFn = lambda x: 1
-        #self._visited, self._visitedlist = {}, []
         self._expanded = 0 
 
         self.start = (gameState.getPacmanPosition(), gameState.getFood(), False)
@@ -621,12 +620,10 @@ class CapsuleSearchAgent(SearchAgent):
         if fn not in dir(search):
             raise AttributeError(fn + ' is not a search function in search.py.')
         func = getattr(search, fn)
-        ####
+        heur = globals()[heuristic]
         
-        self.searchFunction = lambda prob: func(prob, foodHeuristic)
-        #self.searchFunction2 = lambda prob: func(prob, foodHeuristic)
+        self.searchFunction = lambda prob: func(prob, heur)
         self.searchType = globals()[prob]
-        #self.searchType2 = FoodSearchProblem
 
     def registerInitialState(self, state):
         """
