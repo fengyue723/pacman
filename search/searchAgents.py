@@ -452,9 +452,26 @@ def foodHeuristic(state, problem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
-    position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    position, foodGrid = state[:2]
+    if len(state) == 3 and state[2] == False:
+        return manhattanHeuristic(position, problem)
+
+    #gameState = problem.startingGameState
+
+    l = foodGrid.asList()
+    if len(l) == 0:
+        return 0
+    food0 = l[0]
+    m = abs(position[0] - food0[0]) + abs(position[1] - food0[1])
+    #m = mazeDistance(position, food0, gameState)
+
+    for food in l[1:]:
+        new = abs(position[0] - food[0]) + abs(position[1] - food[1])
+        #new = mazeDistance(position, food, gameState)
+        if new >= m:
+            m = new
+    return m
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -539,4 +556,88 @@ def mazeDistance(point1, point2, gameState):
     assert not walls[x1][y1], 'point1 is a wall: ' + str(point1)
     assert not walls[x2][y2], 'point2 is a wall: ' + str(point2)
     prob = PositionSearchProblem(gameState, start=point1, goal=point2, warn=False, visualize=False)
-    return len(search.bfs(prob))
+    return len(search.astar(prob, manhattanHeuristic))
+
+class CapsuleSearchProblem(FoodSearchProblem):
+    """
+    A capsule search problem. Assuming exactly one capsule,
+    goal is to eat capsule first and then eat all food.
+    Coded by @Peiyi Wang.
+    """
+    def __init__(self, gameState):
+        self.capsule = gameState.getCapsules()[0]
+        self.goal = self.capsule
+        self.food = gameState.getFood()
+
+        self.startingGameState = gameState
+
+        self.walls = gameState.getWalls()
+
+        self.startState = gameState.getPacmanPosition()
+        self.costFn = lambda x: 1
+        #self._visited, self._visitedlist = {}, []
+        self._expanded = 0 
+
+        self.start = (gameState.getPacmanPosition(), gameState.getFood(), False)
+        self.heuristicInfo = {} # A dictionary for the heuristic to store information
+
+    def getStartState(self):
+        return self.start
+
+    def isGoalState(self, state):
+        """
+        The state is Pacman's position. Fill this in with a goal test that will
+        complete the problem definition.
+        """
+        return state[1].count() == 0
+
+        #util.raiseNotDefined()
+
+    def getSuccessors(self, state):
+        "Returns successor states, the actions they require, and a cost of 1."
+        successors = []
+        self._expanded += 1 # DO NOT CHANGE
+        for direction in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+            x,y = state[0]
+            dx, dy = Actions.directionToVector(direction)
+            nextx, nexty = int(x + dx), int(y + dy)
+            if state[2] == False:
+                if not self.walls[nextx][nexty] and not self.food[nextx][nexty]:
+                    nextFood = state[1].copy()
+                    if (nextx, nexty) == self.capsule:
+                        successors.append( ( ((nextx, nexty), nextFood, True), direction, 1) )
+                    else:
+                        successors.append( ( ((nextx, nexty), nextFood, False), direction, 1) )
+            elif not self.walls[nextx][nexty]:
+                nextFood = state[1].copy()
+                nextFood[nextx][nexty] = False
+                successors.append( ( ((nextx, nexty), nextFood, True), direction, 1) )
+        return successors
+
+class CapsuleSearchAgent(SearchAgent):
+    "A SearchAgent for CapsuleSearchProblem using weighted A* and foodHeuristic"
+    def __init__(self,fn='waStarSearch', prob='CapsuleSearchProblem', heuristic='foodHeuristic'):
+        ###
+        if fn not in dir(search):
+            raise AttributeError(fn + ' is not a search function in search.py.')
+        func = getattr(search, fn)
+        ####
+        
+        self.searchFunction = lambda prob: func(prob, foodHeuristic)
+        #self.searchFunction2 = lambda prob: func(prob, foodHeuristic)
+        self.searchType = globals()[prob]
+        #self.searchType2 = FoodSearchProblem
+
+    def registerInitialState(self, state):
+        """
+        state: a GameState object (pacman.py)
+        """
+        if self.searchFunction == None: raise Exception("No search function provided for SearchAgent")
+        starttime = time.time()
+        problem = self.searchType(state) # Makes a new search problem
+
+        self.actions  = self.searchFunction(problem)
+
+        totalCost = problem.getCostOfActions(self.actions)
+        print('Path found with total cost of %d in %.1f seconds' % (totalCost, time.time() - starttime))
+        if '_expanded' in dir(problem): print('Search nodes expanded: %d' % problem._expanded)
