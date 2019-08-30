@@ -90,22 +90,24 @@ def depthFirstSearch(problem):
     if problem.isGoalState(problem.getStartState()):
       return []
     stack = util.Stack()
-    stack.push(problem.getStartState())
-    used = {problem.getStartState():[None, None]}
+    stack.push([problem.getStartState(), None, None])
+    used = {}
+    
     while not stack.isEmpty():
       node = stack.pop()
-      for child in problem.getSuccessors(node):
-        if child[0] not in used:
-          used[child[0]] = [node,child[1]]
-          stack.push(child[0])
-        if problem.isGoalState(child[0]):
+      if node[0] not in used:
+        used[node[0]] = [node[1], node[2]] #state:[action, father]
+        if problem.isGoalState(node[0]):
           res = []
-          cur = child[0]
+          cur = node[0]
           while used[cur][0] != None:
-            res.append(used[cur][1])
-            cur = used[cur][0]
+            res.append(used[cur][0])
+            cur = used[cur][1]
           res = res[::-1]
           return res
+        for child in problem.getSuccessors(node[0]):
+          stack.push([child[0], child[1], node[0]])
+
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
@@ -114,27 +116,56 @@ def breadthFirstSearch(problem):
     if problem.isGoalState(problem.getStartState()):
       return []
     queue = util.Queue()
-    queue.push(problem.getStartState())
-    used = {problem.getStartState():[None, None]}
+    queue.push([problem.getStartState(), None, None])
+    used = {}
+    
     while not queue.isEmpty():
       node = queue.pop()
-      for child in problem.getSuccessors(node):
-        if child[0] not in used:
-          used[child[0]] = [node,child[1]]
-          queue.push(child[0])
-        if problem.isGoalState(child[0]):
+      if node[0] not in used:
+        used[node[0]] = [node[1], node[2]] #state:[action, father]
+        if problem.isGoalState(node[0]):
           res = []
-          cur = child[0]
+          cur = node[0]
           while used[cur][0] != None:
-            res.append(used[cur][1])
-            cur = used[cur][0]
+            res.append(used[cur][0])
+            cur = used[cur][1]
           res = res[::-1]
           return res
+        for child in problem.getSuccessors(node[0]):
+          queue.push([child[0], child[1], node[0]])
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE IF YOU WANT TO PRACTICE ***"
+    heap = util.PriorityQueue()
+    heap.push((problem.getStartState(), 0, None, None), 0)
+    
+    closed = {}
+    best_g = {}
+    
+    while not heap.isEmpty():
+      node = heap.pop()
+      #for child in problem.getSuccessors(node):
+      g = node[1]
+      if node[0] not in closed or g < best_g[node[0]]:
+        closed[node[0]] = [g, node[2], node[3]] #state:[g,action,father]
+        best_g[node[0]] = g
+
+        if problem.isGoalState(node[0]):
+          res=[]
+          cur=node[0]
+          while closed[cur][2] != None:
+            res.append(closed[cur][1])
+            cur = closed[cur][2]
+          res = res[::-1]
+          return res
+
+        for child in problem.getSuccessors(node[0]):
+          g2 = g + child[2]
+          heap.push((child[0], g2, child[1], node[0]), g2)
+
+
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
