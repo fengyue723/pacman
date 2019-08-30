@@ -2,6 +2,6 @@
 # This solution is designed to support both right-to-left
 # and left-to-right implementations.
 solution: "Right Right"
-expanded_states: "A A B A B D"
+expanded_states: "A A B"
 rev_solution: "Right Right"
-rev_expanded_states: "A A B A B D"
+rev_expanded_states: "A A B"
