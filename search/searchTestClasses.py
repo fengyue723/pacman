@@ -535,7 +535,7 @@ class HeuristicTest(testClasses.TestCase):
         print("Solving problem", self.layoutName, self.heuristicName)
         print(self.layoutText)
         problem, _, heuristic = self.setupProblem(searchAgents)
-        path = search.astar(problem, heuristic)
+        path = search.wastar(problem, heuristic)
         cost = problem.getCostOfActions(path)
         print("Problem solved")
 
@@ -576,14 +576,14 @@ class HeuristicGrade(testClasses.TestCase):
         searchAgents = moduleDict['searchAgents']
         problem, _, heuristic = self.setupProblem(searchAgents)
 
-        path = search.astar(problem, heuristic)
+        path = search.wastar(problem, heuristic)
 
         expanded = problem._expanded
 
         if not checkSolution(problem, path):
             grades.addMessage('FAIL: %s' % self.path)
             grades.addMessage('\tReturned path is not a solution.')
-            grades.addMessage('\tpath returned by astar: %s' % expanded)
+            grades.addMessage('\tpath returned by wastar: %s' % expanded)
             return False
 
         grades.addPoints(self.basePoints)
@@ -753,7 +753,7 @@ class CornerHeuristicSanity(testClasses.TestCase):
         start_state = pacman.GameState()
         start_state.initialize(lay, 0)
         problem = searchAgents.CornersProblem(start_state)
-        solution = search.astar(problem, searchAgents.cornersHeuristic)
+        solution = search.wastar(problem, searchAgents.cornersHeuristic)
         handle.write('cost: "%d"\n' % len(solution))
         handle.write('path: """\n%s\n"""\n' % wrap_solution(solution))
         handle.close()
@@ -781,7 +781,7 @@ class CornerHeuristicPacman(testClasses.TestCase):
         if searchAgents.cornersHeuristic(start_state, problem) > true_cost:
             grades.addMessage('FAIL: Inadmissible heuristic')
             return False
-        path = search.astar(problem, searchAgents.cornersHeuristic)
+        path = search.wastar(problem, searchAgents.cornersHeuristic)
         print("path:", path)
         print("path length:", len(path))
         cost = problem.getCostOfActions(path)
@@ -814,7 +814,7 @@ class CornerHeuristicPacman(testClasses.TestCase):
         start_state = pacman.GameState()
         start_state.initialize(lay, 0)
         problem = searchAgents.CornersProblem(start_state)
-        solution = search.astar(problem, searchAgents.cornersHeuristic)
+        solution = search.wastar(problem, searchAgents.cornersHeuristic)
         handle.write('cost: "%d"\n' % len(solution))
         handle.write('path: """\n%s\n"""\n' % wrap_solution(solution))
         handle.write('thresholds: "2000 1600 1200"\n')
