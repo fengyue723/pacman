@@ -89,21 +89,22 @@ def depthFirstSearch(problem):
     "*** YOUR CODE HERE IF YOU WANT TO PRACTICE ***"
     if problem.isGoalState(problem.getStartState()):
       return []
-    stack=[problem.getStartState()]
-    used={problem.getStartState():[None, None]}
-    while stack:
-      node=stack.pop()
+    stack = util.Stack()
+    stack.push(problem.getStartState())
+    used = {problem.getStartState():[None, None]}
+    while not stack.isEmpty():
+      node = stack.pop()
       for child in problem.getSuccessors(node):
         if child[0] not in used:
-          used[child[0]]=[node,child[1]]
-          stack.append(child[0])
+          used[child[0]] = [node,child[1]]
+          stack.push(child[0])
         if problem.isGoalState(child[0]):
-          res=[]
-          cur=child[0]
-          while used[cur][0]!=None:
+          res = []
+          cur = child[0]
+          while used[cur][0] != None:
             res.append(used[cur][1])
-            cur=used[cur][0]
-          res=res[::-1]
+            cur = used[cur][0]
+          res = res[::-1]
           return res
     util.raiseNotDefined()
 
@@ -112,21 +113,22 @@ def breadthFirstSearch(problem):
     "*** YOUR CODE HERE IF YOU WANT TO PRACTICE ***"
     if problem.isGoalState(problem.getStartState()):
       return []
-    queue=[problem.getStartState()]
-    used={problem.getStartState():[None, None]}
-    while queue:
-      node=queue.pop(0)
+    queue = util.Queue()
+    queue.push(problem.getStartState())
+    used = {problem.getStartState():[None, None]}
+    while not queue.isEmpty():
+      node = queue.pop()
       for child in problem.getSuccessors(node):
         if child[0] not in used:
-          used[child[0]]=[node,child[1]]
-          queue.append(child[0])
+          used[child[0]] = [node,child[1]]
+          queue.push(child[0])
         if problem.isGoalState(child[0]):
-          res=[]
-          cur=child[0]
-          while used[cur][0]!=None:
+          res = []
+          cur = child[0]
+          while used[cur][0] != None:
             res.append(used[cur][1])
-            cur=used[cur][0]
-          res=res[::-1]
+            cur = used[cur][0]
+          res = res[::-1]
           return res
     util.raiseNotDefined()
 
@@ -148,26 +150,33 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     
 
     heap = util.PriorityQueue()
-    h0 = heuristic(problem.getStartState(),problem)
-    heap.push(problem.getStartState(),[h0,h0])
+    h0 = heuristic(problem.getStartState(), problem)
+    heap.push((problem.getStartState(), 0, None, None), [h0, h0])
     
-    closed={problem.getStartState():[0,None,None]} #state:[g,action,father]
+    closed = {}
+    best_g = {}
+    
     while not heap.isEmpty():
-      node=heap.pop()
-      for child in problem.getSuccessors(node):
-        g=closed[node][0]+child[2]
-        if child[0] not in closed or g<closed[child[0]][0]:
-          closed[child[0]]=[g,child[1],node]
-          h=heuristic(child[0],problem)
-          heap.push(child[0],[g+h,h])
-        if problem.isGoalState(child[0]):
+      node = heap.pop()
+      #for child in problem.getSuccessors(node):
+      g = node[1]
+      if node[0] not in closed or g < best_g[node[0]]:
+        closed[node[0]] = [g, node[2], node[3]] #state:[g,action,father]
+        best_g[node[0]] = g
+
+        if problem.isGoalState(node[0]):
           res=[]
-          cur=child[0]
-          while closed[cur][2]!=None:
+          cur=node[0]
+          while closed[cur][2] != None:
             res.append(closed[cur][1])
-            cur=closed[cur][2]
-          res=res[::-1]
+            cur = closed[cur][2]
+          res = res[::-1]
           return res
+
+        for child in problem.getSuccessors(node[0]):
+          h = heuristic(child[0],problem)
+          g2 = g + child[2]
+          heap.push((child[0], g2, child[1], node[0]), [g2+h,h])
 
     util.raiseNotDefined()
 
@@ -178,24 +187,24 @@ def iterativeDeepeningSearch(problem):
       return []
     depth=1
     while True:
-      stack=[[problem.getStartState(),0]]
-      used={problem.getStartState():[None, None, 0]}
+      stack = [[problem.getStartState(),0]]
+      used = {problem.getStartState():[None, None, 0]}
       while stack:
-        node=stack.pop()
-        if node[1]<depth:
+        node = stack.pop()
+        if node[1] < depth:
           for child in problem.getSuccessors(node[0]):
-            if child[0] not in used or used[node[0]][2]+1<used[child[0]][2]:
-              used[child[0]]=[node[0],child[1],used[node[0]][2]+1]
-              stack.append([child[0],node[1]+1])
+            if child[0] not in used or used[node[0]][2]+1 < used[child[0]][2]:
+              used[child[0]] = [node[0], child[1], used[node[0]][2]+1]
+              stack.append([child[0], node[1]+1])
             if problem.isGoalState(child[0]):
-              res=[]
-              cur=child[0]
-              while used[cur][0]!=None:
+              res = []
+              cur = child[0]
+              while used[cur][0] != None:
                 res.append(used[cur][1])
-                cur=used[cur][0]
-              res=res[::-1]
+                cur = used[cur][0]
+              res = res[::-1]
               return res
-      depth+=1
+      depth += 1
 
     util.raiseNotDefined()
 
@@ -204,27 +213,33 @@ def waStarSearch(problem, heuristic=nullHeuristic):
     "*** YOUR CODE HERE FOR TASK 2 ***"
     
     heap = util.PriorityQueue()
-    h0 = heuristic(problem.getStartState(),problem)
-    heap.push(problem.getStartState(),[2*h0,h0])
+    h0 = heuristic(problem.getStartState(), problem)
+    heap.push((problem.getStartState(), 0, None, None), [2*h0, h0])
     
-    closed={problem.getStartState():[0,None,None]} #state:[g,action,father]
+    closed = {}
+    best_g = {}
+    
     while not heap.isEmpty():
-      node=heap.pop()
-      #print(node)
-      for child in problem.getSuccessors(node):
-        g=closed[node][0]+child[2]
-        if child[0] not in closed or g<closed[child[0]][0]:
-          closed[child[0]]=[g,child[1],node]
-          h=heuristic(child[0],problem)
-          heap.push(child[0],[g+2*h,h])
-        if problem.isGoalState(child[0]):
+      node = heap.pop()
+      #for child in problem.getSuccessors(node):
+      g = node[1]
+      if node[0] not in closed or g < best_g[node[0]]:
+        closed[node[0]] = [g, node[2], node[3]] #state:[g,action,father]
+        best_g[node[0]] = g
+
+        if problem.isGoalState(node[0]):
           res=[]
-          cur=child[0]
-          while closed[cur][2]!=None:
+          cur=node[0]
+          while closed[cur][2] != None:
             res.append(closed[cur][1])
-            cur=closed[cur][2]
-          res=res[::-1]
+            cur = closed[cur][2]
+          res = res[::-1]
           return res
+
+        for child in problem.getSuccessors(node[0]):
+          h = heuristic(child[0],problem)
+          g2 = g + child[2]
+          heap.push((child[0], g2, child[1], node[0]), [g2+2*h,h])
 
     util.raiseNotDefined()
 
