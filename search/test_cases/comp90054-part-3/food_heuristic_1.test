@@ -1,0 +1,18 @@
+class: "HeuristicGrade"
+
+heuristic: "foodHeuristic"
+searchProblemClass: "CapsuleSearchProblem"
+layoutName: "capsuleSearch"
+layout: """
+%%%%%%%%%%%%%%%
+%.          . %
+%%%.%%%.%%.%% %
+%      P  .   %
+%%%%%% %%%o%% %
+%...          %
+%%%%%%%%%%%%%%%
+"""
+basePoints: "3"
+# gradingThresholds: "15000 12000 9000 7000"
+gradingThresholds: "15000 14000 13000"
+
