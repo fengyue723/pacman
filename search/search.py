@@ -196,8 +196,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         best_g[node[0]] = g
 
         if problem.isGoalState(node[0]):
-          res=[]
-          cur=node[0]
+          res = []
+          cur = node[0]
           while closed[cur][2] != None:
             res.append(closed[cur][1])
             cur = closed[cur][2]
@@ -216,17 +216,18 @@ def iterativeDeepeningSearch(problem):
     "*** YOUR CODE HERE FOR TASK 1 ***"
     if problem.isGoalState(problem.getStartState()):
       return []
-    depth=1
+    depth = 1
     while True:
-      stack = [[problem.getStartState(),0]]
+      stack = util.Stack()
+      stack.push([problem.getStartState(),0])
       used = {problem.getStartState():[None, None, 0]}
-      while stack:
+      while not stack.isEmpty():
         node = stack.pop()
         if node[1] < depth:
           for child in problem.getSuccessors(node[0]):
             if child[0] not in used or used[node[0]][2]+1 < used[child[0]][2]:
               used[child[0]] = [node[0], child[1], used[node[0]][2]+1]
-              stack.append([child[0], node[1]+1])
+              stack.push([child[0], node[1]+1])
             if problem.isGoalState(child[0]):
               res = []
               cur = child[0]
@@ -237,7 +238,7 @@ def iterativeDeepeningSearch(problem):
               return res
       depth += 1
 
-    util.raiseNotDefined()
+
 
 def waStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has has the weighted (x 2) lowest combined cost and heuristic first."""
