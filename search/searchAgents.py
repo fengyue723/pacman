@@ -457,20 +457,49 @@ def foodHeuristic(state, problem):
     if len(state) == 3 and state[2] == False:
         return manhattanHeuristic(position, problem)
 
-    #gameState = problem.startingGameState
+    gameState = problem.startingGameState
 
     l = foodGrid.asList()
+
     if len(l) == 0:
         return 0
-    food0 = l[0]
-    m = abs(position[0] - food0[0]) + abs(position[1] - food0[1])
-    #m = mazeDistance(position, food0, gameState)
+    elif len(l) == 1:
+        return mazeDistance(position, l[0], gameState)
 
-    for food in l[1:]:
-        new = abs(position[0] - food[0]) + abs(position[1] - food[1])
-        #new = mazeDistance(position, food, gameState)
-        if new >= m:
-            m = new
+    if 'table' not in problem.heuristicInfo:
+        table = []
+        for food1 in l:
+            for food2 in l:
+                table.append((food1, food2, mazeDistance(food1, food2, gameState)))
+        table.sort(key = lambda x:x[2], reverse=True)
+        problem.heuristicInfo['table'] = table
+
+    farest = 0
+    p1 = None
+    p2 = None
+
+    #new_table = problem.heuristicInfo['table'].copy()
+    for pair in problem.heuristicInfo['table']:
+        if pair[0] in l and pair[1] in l:
+            farest = pair[2]
+            p1 = pair[0]
+            p2 = pair[1]
+            break
+
+    l1 = mazeDistance(position, p1, gameState)
+    l2 = mazeDistance(position, p2, gameState)
+    m = min(l1, l2) + farest
+    # if len(l) == 0:
+    #     return 0
+    # food0 = l[0]
+    # m = abs(position[0] - food0[0]) + abs(position[1] - food0[1])
+    # #m = mazeDistance(position, food0, gameState)
+
+    # for food in l[1:]:
+    #     new = abs(position[0] - food[0]) + abs(position[1] - food[1])
+    #     #new = mazeDistance(position, food, gameState)
+    #     if new >= m:
+    #         m = new
     return m
 
 class ClosestDotSearchAgent(SearchAgent):
