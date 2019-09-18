@@ -1,0 +1,61 @@
+OTHER
+Starting on 9-12 at 21:09:40
+
+Question comp90054-part-1
+=========================
+*** PASS: test_cases/comp90054-part-1/ids_0.test
+*** 	solution:		['Right', 'Right']
+*** 	expanded_states:	['A', 'A', 'B']
+*** PASS: test_cases/comp90054-part-1/ids_1.test
+*** 	solution:		['Right', 'Right']
+*** 	expanded_states:	['A', 'A', 'E', 'B']
+*** PASS: test_cases/comp90054-part-1/ids_2.test
+*** 	solution:		['Right', 'Down', 'Right']
+*** 	expanded_states:	['A', 'A', 'E', 'B', 'A', 'E', 'B', 'D']
+*** PASS: test_cases/comp90054-part-1/ids_3.test
+*** 	solution:		['Right', 'Right']
+*** 	expanded_states:	['A', 'A', 'E', 'B']
+
+### Question comp90054-part-1: 4/4 ###
+
+
+Question comp90054-part-2
+=========================
+*** PASS: test_cases/comp90054-part-2/wastar_0.test
+*** 	solution:		['Right', 'Right']
+*** 	expanded_states:	['A', 'B', 'D']
+*** PASS: test_cases/comp90054-part-2/wastar_1.test
+*** 	solution:		['Right', 'Right', 'Right']
+*** 	expanded_states:	['S', 'A', 'D', 'C']
+*** PASS: test_cases/comp90054-part-2/wastar_2.test
+*** 	solution:		['Right', 'Right', 'Right']
+*** 	expanded_states:	['S', 'A', 'C']
+*** PASS: test_cases/comp90054-part-2/wastar_3.test
+*** 	solution:		['Down', 'Right']
+*** 	expanded_states:	['S', 'B']
+
+### Question comp90054-part-2: 4/4 ###
+
+
+Question comp90054-part-3
+=========================
+Path found with total cost of 68 in 0.1 seconds
+Search nodes expanded: 77
+0.16214394569396973
+
+### Question comp90054-part-3: 6/6 ###
+
+
+Finished at 21:09:40
+
+Provisional grades
+==================
+Question comp90054-part-1: 4/4
+Question comp90054-part-2: 4/4
+Question comp90054-part-3: 6/6
+------------------
+Total: 14/14
+
+Your grades are NOT yet registered.  To register your grades, make sure
+to follow your instructor's guidelines to receive credit on your project.
+
