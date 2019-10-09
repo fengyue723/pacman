@@ -379,6 +379,7 @@ class FoodSearchProblem:
     """
     def __init__(self, startingGameState):
         self.start = (startingGameState.getPacmanPosition(), startingGameState.getFood())
+        #print(type(startingGameState.getFood()))
         self.walls = startingGameState.getWalls()
         self.startingGameState = startingGameState
         self._expanded = 0 # DO NOT CHANGE
@@ -644,7 +645,7 @@ class CapsuleSearchProblem(FoodSearchProblem):
 
 class CapsuleSearchAgent(SearchAgent):
     "A SearchAgent for CapsuleSearchProblem using weighted A* and foodHeuristic"
-    def __init__(self,fn='waStarSearch', prob='CapsuleSearchProblem', heuristic='foodHeuristic'):
+    def __init__(self, fn='waStarSearch', prob='CapsuleSearchProblem', heuristic='foodHeuristic'):
         ###
         if fn not in dir(search):
             raise AttributeError(fn + ' is not a search function in search.py.')

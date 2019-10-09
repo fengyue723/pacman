@@ -189,7 +189,6 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     
     while not heap.isEmpty():
       node = heap.pop()
-      #for child in problem.getSuccessors(node):
       g = node[1]
       if node[0] not in closed or g < best_g[node[0]]:
         closed[node[0]] = [g, node[2], node[3]] #state:[g,action,father]
